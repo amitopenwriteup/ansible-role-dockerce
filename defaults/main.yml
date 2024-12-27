@@ -1,0 +1,7 @@
+docker_repo_url: "https://download.docker.com/linux/ubuntu"
+docker_gpg_key_url: "https://download.docker.com/linux/ubuntu/gpg"
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+

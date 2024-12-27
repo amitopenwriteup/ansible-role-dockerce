@@ -1,0 +1,32 @@
+- name: Get Ubuntu release codename
+  shell: "lsb_release -cs|cut -f2"
+  register: release_codename
+
+- name: Add Docker GPG key
+  apt_key:
+    url: "{{ docker_gpg_key_url }}"
+    state: present
+
+- name: Add Docker APT repository
+  apt_repository:
+    repo: "deb [arch=amd64] {{ docker_repo_url }} {{ release_codename.stdout }} stable"
+    state: present
+
+- name: Update APT cache after adding Docker repo
+  apt:
+    update_cache: yes
+
+- name: Install Docker packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ docker_packages }}"
+  notify: restart docker
+
+- name: Ensure Docker is started and enabled
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  notify: start docker
+
